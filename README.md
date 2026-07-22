@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MyEye
 
-## Getting Started
+MyEye คือโปรเจกต์เว็บแอปพลิเคชันสำหรับระบบคัดกรองความเสี่ยงโรคอัลไซเมอร์เบื้องต้นจากภาพจอประสาทตา (retinal fundus image) ด้วย AI โดยออกแบบให้มี UI ที่ดูเป็นระบบของโรงพยาบาล มีคำเตือนทางการแพทย์และความปลอดภัยในทุกขั้นตอน
 
-First, run the development server:
+## คุณสมบัติหลัก
+
+- หน้าแรกที่มี Hero, workflow, highlights และ CTA
+- หน้าอัปโหลดภาพพร้อมตรวจคุณภาพภาพเบื้องต้น
+- หน้าแสดงผลลัพธ์จาก AI พร้อมคำอธิบายและคำแนะนำ
+- Dashboard เก็บประวัติการตรวจใน Local Storage
+- API route /api/predict สำหรับเชื่อมต่อ FastAPI
+- Medical disclaimer ทุกหน้า
+
+## โครงสร้างโปรเจกต์
+
+- app/ - Next.js App Router
+- components/medical/ - UI ที่เกี่ยวกับ medical flow
+- components/ui/ - reusable UI primitives
+- lib/ - utility และ mapping logic
+- services/ - localStorage และ history service
+- types/ - TypeScript types
+- utils/ - file validation และ helper
+
+## การติดตั้ง
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ตัวแปรสิ่งแวดล้อม
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- FASTAPI_URL: URL ของ FastAPI endpoint สำหรับการทำนาย
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## FastAPI ตัวอย่าง
 
-## Learn More
+สร้างไฟล์ backend/app.py ด้วยโค้ดตัวอย่างดังนี้:
 
-To learn more about Next.js, take a look at the following resources:
+```python
+from fastapi import FastAPI, File, UploadFile
+from pydantic import BaseModel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+app = FastAPI()
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+class PredictionResponse(BaseModel):
+    prediction: str
+    confidence: float
+    description: str
+    recommendation: str
+    gradcam: str | None = None
 
-## Deploy on Vercel
+@app.post("/predict", response_model=PredictionResponse)
+async def predict(file: UploadFile = File(...)):
+    return {
+        "prediction": "High Risk",
+        "confidence": 94.62,
+        "description": "AI ตรวจพบลักษณะที่สัมพันธ์กับความเสี่ยงของโรคอัลไซเมอร์",
+        "recommendation": "ควรเข้าพบแพทย์เฉพาะทางเพื่อรับการตรวจเพิ่มเติม",
+        "gradcam": "heatmap.png",
+    }
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## วิธีเชื่อมต่อ AI Model
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. เตรียมโมเดล TensorFlow/PyTorch ที่รับ input RGB 512x512
+2. แปลงภาพเป็น RGB และ resize ให้ได้ขนาด 512x512
+3. ส่งภาพไปยัง endpoint /predict
+4. รับผลลัพธ์และแสดงบนหน้า result
+
+## แนวทางการฝึกโมเดลเบื้องต้น
+
+- ใช้ dataset ของ retinal fundus image ที่มีป้ายกำกับ Normal / Low Risk / Medium Risk / High Risk
+- เตรียมโครงสร้างโฟลเดอร์ train/valid/test
+- ใช้ EfficientNet หรือ ResNet เป็น backbone
+- ปรับแต่ง classification head สำหรับ 4 classes
+
+## แนวทางทดสอบ
+
+- ทดสอบการอัปโหลดไฟล์ถูกต้องและผิดประเภท
+- ทดสอบกรณีภาพเบลอหรือความสว่างต่ำ
+- ทดสอบกรณี API ล้มเหลว
+- ทดสอบการบันทึกผลใน Local Storage
+
+## Deploy
+
+แนะนำให้ deploy บน Vercel สำหรับ frontend และ deploy FastAPI บน Render / Railway / Azure Container Apps
+
+## Medical Disclaimer
+
+ระบบนี้เป็นเพียงเครื่องมือคัดกรองเบื้องต้นเพื่อการศึกษาและงานวิจัยเท่านั้น ไม่สามารถใช้วินิจฉัยโรคได้ ผลลัพธ์จาก AI ควรได้รับการยืนยันโดยแพทย์ผู้เชี่ยวชาญก่อนนำไปใช้ในการตัดสินใจทางการแพทย์
