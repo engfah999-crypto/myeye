@@ -1,0 +1,5 @@
+image_path,label
+sample_images/normal_001.png,Normal
+sample_images/low_001.png,Low Risk
+sample_images/medium_001.png,Medium Risk
+sample_images/high_001.png,High Risk
