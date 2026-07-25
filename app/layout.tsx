@@ -19,6 +19,10 @@ const ibmPlexSansThai = IBM_Plex_Sans_Thai({
 export const metadata: Metadata = {
   title: "MyEye | Alzheimer Screening",
   description: "MyEye medical AI screening prototype for retinal fundus images with disclaimer and explainable results.",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+  },
 };
 
 const navItems = [
