@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Camera, FileImage, Loader2, RefreshCcw, RotateCw, ScanLine, Trash2, UploadCloud } from "lucide-react";
@@ -44,18 +44,24 @@ export function UploadPanel() {
 
   const touchHandledRef = useRef(false);
 
-  const handlePointerAction = useCallback(async (action: () => Promise<void>, event: PointerEvent<HTMLButtonElement>) => {
-    if (event.pointerType === "touch") {
-      touchHandledRef.current = true;
-    }
+  const handlePointerAction = useCallback(async (action: () => Promise<void>, event: MouseEvent<HTMLButtonElement> | PointerEvent<HTMLButtonElement>) => {
+    const isTouchPointer = "pointerType" in event && ((event as PointerEvent<HTMLButtonElement>).pointerType === "touch" || (event as PointerEvent<HTMLButtonElement>).pointerType === "pen");
 
-    if (event.type === "click" && touchHandledRef.current) {
-      touchHandledRef.current = false;
+    if (isTouchPointer) {
+      touchHandledRef.current = true;
+      event.preventDefault();
+      await action();
       return;
     }
 
-    event.preventDefault();
-    await action();
+    if (event.type === "click") {
+      if (touchHandledRef.current) {
+        touchHandledRef.current = false;
+        return;
+      }
+      event.preventDefault();
+      await action();
+    }
   }, []);
 
   const stopCamera = useCallback(() => {
