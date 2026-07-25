@@ -17,7 +17,7 @@ export function HeroSection() {
           </div>
           <div className="space-y-4">
             <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-              ระบบคัดกรองความเสี่ยงโรคอัลไซเมอร์เบื้องต้นด้วย AI จากภาพจอประสาทตา
+              ระบบคัดกรองความเสี่ยง<br />โรคอัลไซเมอร์เบื้องต้นด้วย AI จากภาพจอประสาทตา
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-slate-600">
               เครื่องมือคัดกรองเบื้องต้นที่ช่วยให้ผู้ใช้และทีมแพทย์ได้รับสัญญาณเตือนจากภาพจอประสาทตาอย่างปลอดภัยและทันสมัย
