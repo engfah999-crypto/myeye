@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Prompt, IBM_Plex_Sans_Thai } from "next/font/google";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Home, LayoutDashboard, ScanLine } from "lucide-react";
 import { SiteHeader } from "@/components/medical/site-header";
 import "./globals.css";
 
