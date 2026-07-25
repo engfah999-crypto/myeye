@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type MouseEvent, type TouchEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Camera, FileImage, Loader2, RefreshCcw, RotateCw, ScanLine, Trash2, UploadCloud } from "lucide-react";
@@ -44,8 +44,8 @@ export function UploadPanel() {
 
   const touchHandledRef = useRef(false);
 
-  const handlePointerAction = useCallback(async (action: () => Promise<void>, event: MouseEvent<HTMLButtonElement> | TouchEvent<HTMLButtonElement>) => {
-    if (event.type === "touchstart") {
+  const handlePointerAction = useCallback(async (action: () => Promise<void>, event: PointerEvent<HTMLButtonElement>) => {
+    if (event.pointerType === "touch") {
       touchHandledRef.current = true;
     }
 
@@ -241,7 +241,7 @@ export function UploadPanel() {
                 <Button
                   type="button"
                   variant="outline"
-                  onTouchStart={(event) => void handlePointerAction(() => openCamera(), event)}
+                  onPointerDown={(event) => void handlePointerAction(() => openCamera(), event)}
                   onClick={(event) => void handlePointerAction(() => openCamera(), event)}
                 >
                   <Camera size={16} /> ใช้กล้องถ่ายภาพ
@@ -291,7 +291,7 @@ export function UploadPanel() {
                 <Button
                   type="button"
                   className="w-full sm:w-auto"
-                  onTouchStart={(event) => void handlePointerAction(() => captureCameraImage(), event)}
+                  onPointerDown={(event) => void handlePointerAction(() => captureCameraImage(), event)}
                   onClick={(event) => void handlePointerAction(() => captureCameraImage(), event)}
                 >
                   ถ่ายภาพ
@@ -300,7 +300,7 @@ export function UploadPanel() {
                   type="button"
                   variant="outline"
                   className="w-full sm:w-auto"
-                  onTouchStart={(event) => void handlePointerAction(() => toggleCameraFacing(), event)}
+                  onPointerDown={(event) => void handlePointerAction(() => toggleCameraFacing(), event)}
                   onClick={(event) => void handlePointerAction(() => toggleCameraFacing(), event)}
                 >
                   <RotateCw size={16} /> สลับกล้อง ({cameraFacing === "environment" ? "กล้องหลัง" : "กล้องหน้า"})
