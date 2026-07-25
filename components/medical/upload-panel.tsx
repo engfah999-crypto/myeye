@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type TouchEvent } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Camera, FileImage, Loader2, RefreshCcw, RotateCw, ScanLine, Trash2, UploadCloud } from "lucide-react";
@@ -41,6 +41,22 @@ export function UploadPanel() {
       consent: true,
     },
   });
+
+  const touchHandledRef = useRef(false);
+
+  const handlePointerAction = useCallback(async (action: () => Promise<void>, event: MouseEvent<HTMLButtonElement> | TouchEvent<HTMLButtonElement>) => {
+    if (event.type === "touchstart") {
+      touchHandledRef.current = true;
+    }
+
+    if (event.type === "click" && touchHandledRef.current) {
+      touchHandledRef.current = false;
+      return;
+    }
+
+    event.preventDefault();
+    await action();
+  }, []);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -222,7 +238,12 @@ export function UploadPanel() {
                 <Button type="button" onClick={() => fileInputRef.current?.click()}>
                   <FileImage size={16} /> เลือกรูปภาพ
                 </Button>
-                <Button type="button" variant="outline" onClick={() => void openCamera()}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onTouchStart={(event) => void handlePointerAction(() => openCamera(), event)}
+                  onClick={(event) => void handlePointerAction(() => openCamera(), event)}
+                >
                   <Camera size={16} /> ใช้กล้องถ่ายภาพ
                 </Button>
               </div>
@@ -267,10 +288,21 @@ export function UploadPanel() {
               </div>
               <canvas ref={canvasRef} className="hidden" />
               <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-                <Button type="button" className="w-full sm:w-auto" onClick={() => void captureCameraImage()}>
+                <Button
+                  type="button"
+                  className="w-full sm:w-auto"
+                  onTouchStart={(event) => void handlePointerAction(() => captureCameraImage(), event)}
+                  onClick={(event) => void handlePointerAction(() => captureCameraImage(), event)}
+                >
                   ถ่ายภาพ
                 </Button>
-                <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => void toggleCameraFacing()}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onTouchStart={(event) => void handlePointerAction(() => toggleCameraFacing(), event)}
+                  onClick={(event) => void handlePointerAction(() => toggleCameraFacing(), event)}
+                >
                   <RotateCw size={16} /> สลับกล้อง ({cameraFacing === "environment" ? "กล้องหลัง" : "กล้องหน้า"})
                 </Button>
               </div>
