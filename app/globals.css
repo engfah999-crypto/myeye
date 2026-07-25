@@ -45,3 +45,35 @@ img {
 .floaty {
   animation: floaty 5s ease-in-out infinite;
 }
+
+.eye-tracker-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.eye-tracker-ball {
+  position: absolute;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 9999px;
+  background: rgba(239, 68, 68, 0.95);
+  box-shadow: 0 0 24px rgba(239, 68, 68, 0.35);
+  animation: eye-track 4.5s ease-in-out infinite;
+  left: 8%;
+  top: 20%;
+}
+
+@keyframes eye-track {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(52vw, 18vh);
+  }
+  50% {
+    transform: translate(32vw, 30vh);
+  }
+  75% {
+    transform: translate(10vw, 40vh);
+  }
+}

@@ -11,8 +11,8 @@ export default function HomePage() {
       <section className="rounded-[2rem] border border-sky-100 bg-gradient-to-br from-sky-100 via-blue-100 to-cyan-100 p-6 shadow-[0_8px_24px_rgba(59,130,246,0.12)] dark:border-slate-800 dark:bg-slate-950/70">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-2xl font-semibold text-black dark:text-white">พร้อมสำหรับการใช้งานและต่อยอด</h2>
-            <p className="mt-2 text-sm leading-6 text-black/80 dark:text-slate-300">
+            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">พร้อมสำหรับการใช้งานและต่อยอด</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-700 dark:text-slate-300">
               โปรเจกต์นี้ถูกออกแบบให้เป็น foundation สำหรับระบบ AI screening ที่มีความปลอดภัยและสามารถต่อยอดไปยังโมเดลจริงในอนาคตได้
             </p>
           </div>

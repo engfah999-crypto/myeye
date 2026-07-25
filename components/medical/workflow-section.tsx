@@ -38,14 +38,14 @@ export function WorkflowSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.3, delay: index * 0.08 }}
-              className="rounded-3xl border border-sky-100 bg-gradient-to-br from-sky-100 via-blue-100 to-cyan-100 p-6 text-slate-800 shadow-[0_8px_24px_rgba(59,130,246,0.12)] dark:border-slate-800 dark:bg-slate-950/70"
+              className="rounded-3xl border border-sky-100 bg-gradient-to-br from-sky-100 via-blue-100 to-cyan-100 p-6 text-slate-900 shadow-[0_8px_24px_rgba(59,130,246,0.12)] dark:border-slate-800 dark:bg-slate-950/70"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
                 <Icon size={22} />
               </div>
               <p className="text-sm font-semibold text-blue-700">0{index + 1}</p>
-              <h3 className="mt-2 text-lg font-semibold text-black">{step.title}</h3>
-              <p className="mt-2 text-sm leading-7 text-black/80 dark:text-slate-300">{step.description}</p>
+              <h3 className="mt-2 text-lg font-semibold text-slate-900">{step.title}</h3>
+              <p className="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-300">{step.description}</p>
             </motion.div>
           );
         })}

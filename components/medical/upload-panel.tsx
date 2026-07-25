@@ -189,7 +189,7 @@ export function UploadPanel() {
       <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle>อัปโหลดภาพจอประสาทตา</CardTitle>
-          <p className="text-sm text-black dark:text-slate-300">รองรับไฟล์ JPG, PNG และภาพที่ถ่ายจากกล้องทุกชนิด</p>
+          <p className="text-sm text-slate-900 dark:text-slate-300">รองรับไฟล์ JPG, PNG และภาพที่ถ่ายจากกล้องทุกชนิด</p>
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-5 text-center dark:border-slate-700 dark:bg-slate-900/50">
@@ -250,7 +250,12 @@ export function UploadPanel() {
                   ปิด
                 </Button>
               </div>
-              <video ref={videoRef} className="h-[260px] w-full rounded-2xl object-cover" playsInline muted />
+              <div className="relative overflow-hidden rounded-2xl border border-slate-700 bg-black/80">
+                <video ref={videoRef} className="h-[260px] w-full rounded-2xl object-cover" playsInline muted />
+                <div className="eye-tracker-overlay pointer-events-none">
+                  <div className="eye-tracker-ball" />
+                </div>
+              </div>
               <canvas ref={canvasRef} className="hidden" />
               <div className="mt-3 flex gap-3">
                 <Button type="button" className="w-full" onClick={() => void captureCameraImage()}>

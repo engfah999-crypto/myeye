@@ -43,13 +43,13 @@ export function FeaturesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}
               transition={{ duration: 0.25, delay: index * 0.05 }}
-              className="rounded-3xl border border-sky-100 bg-gradient-to-br from-sky-100 via-blue-100 to-cyan-100 p-6 text-black shadow-[0_8px_24px_rgba(59,130,246,0.12)] dark:border-slate-800 dark:bg-slate-950/70"
+              className="rounded-3xl border border-sky-100 bg-gradient-to-br from-sky-100 via-blue-100 to-cyan-100 p-6 text-slate-900 shadow-[0_8px_24px_rgba(59,130,246,0.12)] dark:border-slate-800 dark:bg-slate-950/70"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
                 <Icon size={20} />
               </div>
-              <h3 className="text-lg font-semibold text-black">{item.title}</h3>
-              <p className="mt-2 text-sm leading-7 text-black/80 dark:text-slate-300">{item.description}</p>
+              <h3 className="text-lg font-semibold text-slate-900">{item.title}</h3>
+              <p className="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-300">{item.description}</p>
             </motion.div>
           );
         })}
