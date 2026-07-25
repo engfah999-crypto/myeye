@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { Camera, FileImage, Loader2, RefreshCcw, ScanLine, Trash2, UploadCloud } from "lucide-react";
+import { Camera, FileImage, Loader2, RefreshCcw, RotateCw, ScanLine, Trash2, UploadCloud } from "lucide-react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,7 @@ export function UploadPanel() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [quality, setQuality] = useState<{ width: number; height: number; brightness: number; blur: number } | null>(null);
   const [cameraOpen, setCameraOpen] = useState(false);
+  const [cameraFacing, setCameraFacing] = useState<"environment" | "user">("environment");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -47,18 +48,7 @@ export function UploadPanel() {
     setCameraOpen(false);
   }, []);
 
-  const resetPreview = useCallback(() => {
-    setPreviewUrl(null);
-    setSelectedFile(null);
-    setQuality(null);
-    setError(null);
-    setSuccessMessage(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  }, []);
-
-  const openCamera = useCallback(async () => {
+  const openCamera = useCallback(async (facing: "environment" | "user" = cameraFacing) => {
     if (!navigator.mediaDevices?.getUserMedia) {
       setError("เบราว์เซอร์นี้ไม่รองรับการถ่ายภาพจากกล้อง กรุณาใช้การอัปโหลดไฟล์แทน");
       return;
@@ -66,10 +56,12 @@ export function UploadPanel() {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
+        video: { facingMode: facing },
         audio: false,
       });
+      streamRef.current?.getTracks().forEach((track) => track.stop());
       streamRef.current = stream;
+      setCameraFacing(facing);
       setCameraOpen(true);
       setError(null);
       if (videoRef.current) {
@@ -78,6 +70,23 @@ export function UploadPanel() {
       }
     } catch {
       setError("ไม่สามารถเปิดกล้องได้ กรุณาให้สิทธิ์การเข้าถึงกล้องหรือใช้การอัปโหลดไฟล์แทน");
+    }
+  }, [cameraFacing]);
+
+  const toggleCameraFacing = useCallback(async () => {
+    const nextFacing = cameraFacing === "environment" ? "user" : "environment";
+    stopCamera();
+    await openCamera(nextFacing);
+  }, [cameraFacing, openCamera, stopCamera]);
+
+  const resetPreview = useCallback(() => {
+    setPreviewUrl(null);
+    setSelectedFile(null);
+    setQuality(null);
+    setError(null);
+    setSuccessMessage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   }, []);
 
@@ -257,9 +266,12 @@ export function UploadPanel() {
                 </div>
               </div>
               <canvas ref={canvasRef} className="hidden" />
-              <div className="mt-3 flex gap-3">
-                <Button type="button" className="w-full" onClick={() => void captureCameraImage()}>
+              <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                <Button type="button" className="w-full sm:w-auto" onClick={() => void captureCameraImage()}>
                   ถ่ายภาพ
+                </Button>
+                <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={() => void toggleCameraFacing()}>
+                  <RotateCw size={16} /> สลับกล้อง ({cameraFacing === "environment" ? "กล้องหลัง" : "กล้องหน้า"})
                 </Button>
               </div>
             </div>
